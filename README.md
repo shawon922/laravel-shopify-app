@@ -12,7 +12,7 @@ Switch to the repo folder
 
     cd laravel-shopify-app
 
-Install all the dependencies using composer
+Install all the dependencies using the composer
 
     composer install
 
@@ -24,7 +24,8 @@ Generate a new application key
 
     php artisan key:generate
 
-Update following variables in .env file
+Update the following variables in the .env file
+
     SHOPIFY_API_KEY=
     SHOPIFY_API_SECRET=
 
