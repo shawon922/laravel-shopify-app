@@ -2,13 +2,7 @@
 
 @section('content')
     <div class="max-w-screen-xl mx-auto px-4 md:px-8">
-        <div class="mt-8 max-w-lg space-y-3">
-            <h3 class="text-indigo-600 font-semibold">
-                Create Product
-            </h3>
-        </div>
-
-        <div class="mt-8 max-w-lg">
+        <div class="max-w-lg">
             
             <form action="{{ route('collections.products.store', ['collection' => $collection->id]) }}" method="post">
                 @sessionToken
@@ -40,9 +34,17 @@
                 <button class="px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150">
                     Submit
                 </button>
+                <a href="{{ URL::tokenRoute('collections.products.list', ['collection' => $collection->id]) }}" class="inline-block px-4 py-2 text-white duration-150 font-medium bg-red-600 rounded-lg hover:bg-red-500 active:bg-red-700">Back</a>
             </form>
         </div>
     </div>
     
 @endsection
 
+@section('scripts')
+    @parent
+
+    <script>
+        actions.TitleBar.create(app, { title: 'Create Product' });
+    </script>
+@endsection
