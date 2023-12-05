@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PaymentController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CollectionController;
-
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,35 +12,32 @@ use App\Http\Controllers\CollectionController;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
-Route::middleware(['verify.shopify', 'request.modifier'])->group(function () {
-
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('home');
-    
-    Route::get('/shop', function () {
-        return view('shop');
-    })->name('shop');
-    
-    Route::controller(CollectionController::class)->group(function () {
-        Route::get('/collections', 'index')->name('collections.list');
-        Route::get('/collections/create', 'create')->name('collections.create');
-        Route::post('/collections', 'store')->name('collections.store');
-        // Route::get('/collections/{collection}', 'show')->name('collections.show');
-        Route::get('/collections/{collection}/edit', 'edit')->name('collections.edit');
-        Route::put('/collections/{collection}', 'update')->name('collections.update');
-        // Route::delete('/collections/{collection}', 'destroy')->name('collections.destroy');
-
-        Route::get('/collections/{collection}/products', 'productIndex')->name('collections.products.list');
-        Route::get('/collections/{collection}/products/create', 'productCreate')->name('collections.products.create');
-        Route::post('/collections/{collection}/products', 'productStore')->name('collections.products.store');
-        Route::get('/collections/{collection}/products/{product}/edit', 'productEdit')->name('collections.products.edit');
-        Route::put('/collections/{collection}/products/{product}', 'productUpdate')->name('collections.products.update');
-    });
-
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+Route::get('/payment', [PaymentController::class, 'create'])->middleware(['auth'])->name('payment.create');
+Route::post('/payment', [PaymentController::class, 'store'])->middleware(['auth', App\Http\Middleware\PreventDuplicateTransaction::class])->name('payment.store');
+
+require __DIR__.'/auth.php';
