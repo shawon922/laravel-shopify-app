@@ -542,4 +542,29 @@ return [
     |
     */
     'frontend_engine' => env('SHOPIFY_FRONTEND_ENGINE', 'BLADE'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Register listeners to the events
+    |--------------------------------------------------------------------------
+    |
+    */
+    'listen' => [
+        \Osiset\ShopifyApp\Messaging\Events\AppInstalledEvent::class => [
+            // \App\Listeners\MyListener::class,
+            \App\Listeners\ShopAppInstalledEventListener::class,
+        ],
+        \Osiset\ShopifyApp\Messaging\Events\ShopAuthenticatedEvent::class => [
+            // \App\Listeners\MyListener::class,
+        ],
+        \Osiset\ShopifyApp\Messaging\Events\ShopDeletedEvent::class => [
+            // \App\Listeners\MyListener::class,
+        ],
+        \Osiset\ShopifyApp\Messaging\Events\AppUninstalledEvent::class => [
+            // \App\Listeners\MyListener::class,
+        ],
+        \Osiset\ShopifyApp\Messaging\Events\PlanActivatedEvent::class => [
+            // \App\Listeners\MyListener::class,
+        ],
+    ],
 ];

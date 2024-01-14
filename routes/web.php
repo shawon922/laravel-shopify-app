@@ -20,11 +20,11 @@ Route::middleware(['verify.shopify', 'request.modifier'])->group(function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('home');
-    
+
     Route::get('/shop', function () {
         return view('shop');
     })->name('shop');
-    
+
     Route::controller(CollectionController::class)->group(function () {
         Route::get('/collections', 'index')->name('collections.list');
         Route::get('/collections/create', 'create')->name('collections.create');
