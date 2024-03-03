@@ -1,0 +1,117 @@
+{% assign end_date = block.settings.offerenddate %}
+
+{% if block.settings.showtimer %}
+    <div id="countdown">
+        <div id="timer" class='{{ block.settings.timer_ui_class }}'>
+            <div>
+                <span id="days">0</span>
+                <span>Days</span>
+            </div>
+            <div>
+                <span id="hours">0</span>
+                <span>Hours</span>
+            </div>
+            <div>
+                <span id="minutes">0</span>
+                <span>Minutes</span>
+            </div>
+            <div>
+                <span id="seconds">0</span>
+                <span>Seconds</span>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<style>
+    #countdown {
+        text-align: center;
+    }
+
+    #timer {
+        display: flex;
+        justify-content: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    #timer div {
+        padding: 0 10px;
+    }
+
+    #timer.default div {
+        border: 2px dashed #000000;
+        color: #000000;
+    }
+
+    #timer.red div {
+        border: 2px dashed #ff0000;
+        color: #ff0000;
+    }
+
+    #timer.green div {
+        border: 2px dashed #008000;
+        color: #008000;
+    }
+
+    #timer span {
+        display: block;
+    }
+</style>
+
+<script type="text/javascript">
+    // Set the target date and time for the countdown
+    const targetDate = new Date('{{ end_date }}').getTime();
+
+    // Update the countdown every second
+    const countdownInterval = setInterval(() => {
+        // Get the current date and time
+        const now = new Date().getTime();
+
+        // Calculate the time difference between the current date/time and the target date/time
+        const timeDifference = targetDate - now;
+
+        // Calculate days, hours, minutes, and seconds
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        // Display the calculated time in the HTML elements
+        document.getElementById("days").textContent = days > 9 ? days : "0" + days;
+        document.getElementById("hours").textContent = hours > 9 ? hours : "0" + hours;
+        document.getElementById("minutes").textContent = minutes > 9 ? minutes : "0" + minutes;
+        document.getElementById("seconds").textContent = seconds > 9 ? seconds : "0" + seconds;
+
+        // Check if the countdown has expired
+        if (timeDifference < 0) {
+            clearInterval(countdownInterval);
+            document.getElementById("timer").innerHTML = "Offer Ended";
+        }
+    }, 1000);
+</script>
+
+{% schema %}
+{
+  "name": "Countdown",
+  "target": "section",
+  "settings": [
+    { "type": "text", "id": "offerenddate", "label": "Timer End Date" },
+    { "type": "checkbox", "id": "showtimer", "label": "Show Timer", "default": true },
+    {
+        "type": "select",
+        "id": "timer_ui_class",
+        "label": "Timer UI",
+        "default": "default",
+        "options": [
+            {"value": "default", "label": "Default"},
+            {"value": "red", "label": "Red"},
+            {"value": "green", "label": "Green"}
+        ]
+    }
+  ]
+}
+{% endschema %}
+

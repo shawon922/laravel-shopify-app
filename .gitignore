@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 
 /app_extension/node_modules
+
+.DS_Store
